@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjpowernode.test.StudentTest">
+    <select id="selectStudents" resultType="com.bjpowernode.entity.Student" parameterType="java.lang.Integer">
+        select * from student where id=#{id};
+    </select>
+
+    <select id="selectMultiQuery" resultType="com.bjpowernode.entity.Student">
+        select * from student where name=#{studentName} or age=#{studentAge};
+    </select>
+
+    <select id="selectMultiObject" resultType="com.bjpowernode.entity.Student">
+        select * from student where name=#{name} or age=#{age};
+    </select>
+
+    <select id="selectMultiPosition" resultType="com.bjpowernode.entity.Student">
+        select * from student where name=#{arg0} or age=#{arg1};
+    </select>
+
+    <select id="selectDynamicSql" resultType="com.bjpowernode.entity.Student">
+        select * from student
+        <where>
+            <if test="name!=null and name!=''">
+                name="%" #{name} "%"
+            </if>
+
+            <if test="age!=null">
+                or age=#{age}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectMultiMap" resultType="com.bjpowernode.entity.Student">
+        select * from student where name=#{name} or age=#{age};
+    </select>
+
+    <select id="selectStudent$" resultType="com.bjpowernode.entity.Student">
+        select id,name,email,age from student order by ${orderName};
+    </select>
+
+    <select id="selectStudentAlias" resultType="com.bjpowernode.entity.Student" >
+        select * from student;
+    </select>
+
+    <select id="selectStudentMap" resultType="map" >
+        select * from student where id=#{id};
+    </select>
+
+    <!--1.列名与属性名不同的；两种解决方案
+            (1)方案一:
+                resultType:默认的赋值规则为:同名的列赋值给同名的属性，所以我可以先创建一个实体类，
+                规定属性名与要输出的列名一致,然后通给sql的列名起别名达到列名与类对应的属性名相匹配的目的。
+     -->
+    <select id="selectColStudent" resultType="com.bjpowernode.entity.MyStudent" >
+        select id studentId,name studentName,email,age from student;
+    </select>
+
+    <resultMap id="studentMap" type="com.bjpowernode.entity.MyStudent">
+        <id column="id" property="studentId"></id>
+        <result column="name" property="studentName"></result>
+        <result column="email" property="email"></result>
+        <result column="age" property="age"></result>
+    </resultMap>
+
+    <select id="selectDiffColStudent" resultMap="studentMap">
+        select id,name,email,age from student;
+    </select>
+
+    <!--like的两种用法:
+                        用法一:直接传递like后跟的内容
+          -->
+    <select id="selectLikeStudent" resultType="com.bjpowernode.entity.Student" >
+        select * from student where name like #{name};
+    </select>
+
+    <!--like的两种用法:
+                       用法一:直接传递like后跟的内容
+         -->
+    <select id="selectLikeStudentOne" resultType="com.bjpowernode.entity.Student" >
+        select * from student where name like "%" #{name} "%";
+    </select>
+
+    <select id="selectForEach" resultType="com.bjpowernode.entity.Student">
+        select *from student where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <!--使用sql片段-->
+    <sql id="sqlFragment">
+        select id,name,email,age from student
+    </sql>
+    <select id="useSqlFragment" resultType="com.bjpowernode.entity.Student">
+        <include refid="sqlFragment"></include>
+        <where>
+            <if test="id!=null">
+                id=#{id}
+            </if>
+        </where>
+    </select>
+    <!--多表联查-->
+    <select id="multiTableQuery" resultType="map" >
+        select s.name,c.classname from student s join classroom c on c.id=s.classId;
+    </select>
+    <!--多表联查(使用vo(view object)包）-->
+    <select id="useViewQuery" resultType="com.bjpowernode.vo.StudentClassRoom" >
+        select s.name sName,c.classname cName from student s join classroom c on c.id=s.classId;
+    </select>
+
+</mapper>

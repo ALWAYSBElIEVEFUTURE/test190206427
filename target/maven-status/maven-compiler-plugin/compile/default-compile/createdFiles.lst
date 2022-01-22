@@ -1,0 +1,4 @@
+com\bjpowernode\entity\Student.class
+com\bjpowernode\test\StudentTest.class
+com\bjpowernode\App.class
+com\bjpowernode\util\MyBatisUtil.class

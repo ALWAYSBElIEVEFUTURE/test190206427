@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--setting控制mybatis全局行为-->
+    <settings>
+        <!--设置mybatis输出日志-->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+        <!--定义别名-->
+        <!--方式一:
+        typeAlias type="" alias=""></typeAlias>
+                type后跟类的全限定名称 alias后跟自定义别名
+                注意:<typeAliases></typeAliases>中自定义别名方式只能二选一,同时注意
+                定义别名的标签要写在同一行上。
+            -->
+    <typeAliases>
+        <!--给指定的类自定义别名-->
+        <typeAlias type="com.bjpowernode.entity.Student" alias="student"></typeAlias>
+        <!--方式二:
+                <package name="">name后跟包名,即该包名下的所有类的别名为对应的类名。
+          -->
+       <!-- <package name="com.bjpowernode.entity.Student" />-->
+    </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url"
+                          value="jdbc:mysql://127.0.0.1:3306/bjpowernode?useUnicode=true&amp;characterEncoding=UTF-8"/>
+                <property name="username" value="root"/>
+                <property name="password" value="3133"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="com/bjpowernode/test/StudentTest.xml"/>
+    </mappers>
+</configuration>
